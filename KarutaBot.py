@@ -1,21 +1,28 @@
-import discord
-from discord.ext import tasks
-from discord.ext    import commands
-from discord.ext.commands   import Bot
-import asyncio
+import discord # Documentation at https://discordpy.readthedocs.io
+from discord.ext import commands
 
-client = discord.Client()
+# Prefix to use bot commands. Can be anything including words
+command_prefix = "!"
 
-@tasks.loop(minutes=30)
-async def test():
-    channel = client.get_channel(964774357224292383/964774357920530444)
-    channel.send("kd")
+# Bot will receive all events (e.g., when a message gets sent, when someone joins the server)
+intents = discord.Intents().all()
 
-@client.event
-async def on_ready():
-    test.start()
+# Creates bot instance. This is the actual "bot"
+bot = commands.Bot(command_prefix=command_prefix, intents=intents)
 
 
+# Use @bot.event to create an event the bot will listen to
+@bot.event
+async def on_ready(): # on_ready is one of the events used by the bot
+    # Get channel id by right clicking on channel and clicking copy id
+    channel_id = 964774357920530444 # Go to Discord settings -> Advanced -> Turn on Developer Mode
+
+    # Gets the channel instance
+    channel = bot.get_channel(channel_id)
+
+    # Send message in channel
+    await channel.send("kd") # Must use "await" because .send() method is asynchronous (Do some research if you wanna know more)
 
 
-Bot.run("TOKEN")
+# Runs discord bot
+bot.run("TOKEN") # Input Discord bot token there
